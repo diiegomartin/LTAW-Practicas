@@ -1,0 +1,103 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+header {
+    background-color: #000000;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+    position: relative;
+}
+
+.logo {
+    max-width: 80px;
+    height: auto;
+    position: absolute;
+    left: 20px; /* Ajusta esta distancia según tus necesidades */
+    top: 50%;
+    transform: translateY(-50%); /* Centra verticalmente el logo */
+}
+
+.back-link-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #444;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.back-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-link:hover {
+    color: #ddd;
+}
+
+main {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+    background-color: #fff;
+}
+
+.product-image {
+    max-width: 50%;
+    height: auto;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+h2 {
+    margin-top: 20px;
+    font-size: 2em;
+    text-align: center;
+}
+
+.specifications {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 10px solid #ddd;
+    padding: 10px 0;
+}
+
+.spec-item:nth-child(even) {
+    background-color: #f0f0f0;
+}
+
+.spec-item h3 {
+    font-size: 1.2em;
+    margin: 0;
+    flex: 1;
+}
+
+.spec-item p {
+    font-size: 1em;
+    margin: 0;
+    flex: 2;
+    text-align: right;
+    color: #333;
+}
+
+footer {
+    background-color: #000000;
+    color: #fff;
+    text-align: center;
+    padding: 1px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
