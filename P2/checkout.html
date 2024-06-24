@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra</title>
+    <link rel="stylesheet" href="checkout.css">
+</head>
+<body>
+    <header>
+        <h1>Finalizar Compra</h1>
+        <a href="index.html" class="btn-volver">Volver a la Página Principal</a>
+    </header>
+    <main>
+        <section id="resumen-compra">
+            <h2>Resumen de Compra</h2>
+            <table class="resumen-tabla">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="resumen-body">
+                    <!-- Contenido generado dinámicamente -->
+                </tbody>
+            </table>
+            <h3>Total: €<span id="precioTotal">0.00</span></h3>
+        </section>
+        <section id="formulario-compra">
+            <h2>Información de Envío</h2>
+            <form id="checkoutForm">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos" required>
+                
+                <label for="email">Correo Electrónico:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="codigoPostal">Código Postal:</label>
+                <input type="text" id="codigoPostal" name="codigoPostal" required>
+                
+                <label for="calle">Calle:</label>
+                <input type="text" id="calle" name="calle" required>
+                
+                <label for="tarjeta">Número de Tarjeta:</label>
+                <input type="text" id="tarjeta" name="tarjeta" required>
+                
+                <button type="submit">Confirmar Compra</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Tienda de Cámaras</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const usuario = localStorage.getItem('usuario');
+            if (!usuario) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const carrito = JSON.parse(Cookies.get('carrito-' + usuario) || '[]');
+            if (carrito.length > 0) {
+                const resumenBody = document.getElementById('resumen-body');
+                let precioTotal = 0;
+
+                carrito.forEach(producto => {
+                    const productoElem = document.createElement('tr');
+                    productoElem.innerHTML = `
+                        <td><img src="imagenes/camara${producto.id}.jpg" alt="${producto.nombre}" /></td>
+                        <td>${producto.nombre}</td>
+                        <td class="precio">€${producto.precio}</td>
+                        <td class="cantidad">${producto.cantidad}</td>
+                        <td class="subtotal">€<span>${(producto.precio * producto.cantidad).toFixed(2)}</span></td>
+                    `;
+                    resumenBody.appendChild(productoElem);
+                    precioTotal += producto.precio * producto.cantidad;
+                });
+
+                document.getElementById('precioTotal').textContent = precioTotal.toFixed(2);
+            } else {
+                document.getElementById('resumen-compra').innerHTML = '<p>No hay productos en el carrito.</p>';
+            }
+
+            document.getElementById('checkoutForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                alert('Compra realizada con éxito. Gracias por su compra.');
+                Cookies.remove('carrito-' + usuario);
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

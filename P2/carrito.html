@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="carrito.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="imagenes/PROCAMERA.png" alt="PROCAMERA Logo" class="logo-empresa">
+            <h1>Carrito de Compras</h1>
+            <a href="index.html" class="btn-volver">Volver a la Página Principal</a>
+        </div>
+    </header>
+    <main>
+        <section id="carrito">
+            <table class="carrito-tabla">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody id="carrito-body">
+                    <!-- Contenido generado dinámicamente -->
+                </tbody>
+            </table>
+        </section>
+        <section id="total">
+            <h2>Total: €<span id="precioTotal">0.00</span></h2>
+            <h3>Cantidad de productos: <span id="cantidadTotal">0</span></h3>
+            <button id="comprarButton">Comprar</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Tienda de Cámaras</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const usuario = localStorage.getItem('usuario');
+            if (!usuario) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const carritoSection = document.getElementById('carrito');
+            const precioTotalElem = document.getElementById('precioTotal');
+            const cantidadTotalElem = document.getElementById('cantidadTotal');
+            const comprarButton = document.getElementById('comprarButton');
+
+            const carrito = JSON.parse(Cookies.get('carrito-' + usuario) || '[]');
+            if (carrito.length > 0) {
+                let precioTotal = 0;
+                let cantidadTotal = 0;
+                const carritoBody = document.getElementById('carrito-body');
+
+                carrito.forEach((producto, index) => {
+                    const stock = parseInt(Cookies.get('stock-' + producto.id) || '0');
+                    const productoElem = document.createElement('tr');
+                    productoElem.className = 'producto-en-carrito';
+                    productoElem.innerHTML = `
+                        <td><img src="imagenes/camara${producto.id}.jpg" alt="${producto.nombre}" /></td>
+                        <td>${producto.nombre}</td>
+                        <td class="precio">€${producto.precio}</td>
+                        <td class="cantidad">
+                            <input type="number" min="1" max="${stock + producto.cantidad}" value="${producto.cantidad}" data-index="${index}" class="cantidad-producto" />
+                        </td>
+                        <td class="subtotal">€<span>${(producto.precio * producto.cantidad).toFixed(2)}</span></td>
+                        <td class="eliminar-del-carrito" data-index="${index}">🗑️</td>
+                    `;
+                    carritoBody.appendChild(productoElem);
+                    precioTotal += producto.precio * producto.cantidad;
+                    cantidadTotal += producto.cantidad;
+                });
+
+                precioTotalElem.textContent = precioTotal.toFixed(2);
+                cantidadTotalElem.textContent = cantidadTotal;
+
+                document.querySelectorAll('.cantidad-producto').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const index = this.getAttribute('data-index');
+                        const nuevaCantidad = parseInt(this.value);
+                        const stock = parseInt(Cookies.get('stock-' + carrito[index].id) || '0');
+                        const cantidadAnterior = carrito[index].cantidad;
+
+                        if (nuevaCantidad < 1 || nuevaCantidad > (stock + cantidadAnterior)) {
+                            alert(`La cantidad debe ser entre 1 y ${stock + cantidadAnterior}`);
+                            this.value = cantidadAnterior;
+                            return;
+                        }
+
+                        carrito[index].cantidad = nuevaCantidad;
+                        Cookies.set('carrito-' + usuario, JSON.stringify(carrito), { expires: 7 });
+
+                        const diferencia = nuevaCantidad - cantidadAnterior;
+                        const nuevoStock = stock - diferencia;
+                        Cookies.set('stock-' + carrito[index].id, nuevoStock, { expires: 7 });
+                        window.location.reload();
+                    });
+                });
+
+                document.querySelectorAll('.eliminar-del-carrito').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        const stock = parseInt(Cookies.get('stock-' + carrito[index].id) || '0');
+                        const cantidadAnterior = carrito[index].cantidad;
+                        const nuevoStock = stock + cantidadAnterior;
+                        Cookies.set('stock-' + carrito[index].id, nuevoStock, { expires: 7 });
+
+                        carrito.splice(index, 1);
+                        Cookies.set('carrito-' + usuario, JSON.stringify(carrito), { expires: 7 });
+                        window.location.reload();
+                    });
+                });
+
+                comprarButton.addEventListener('click', function() {
+                    window.location.href = 'checkout.html';
+                });
+            } else {
+                carritoSection.innerHTML = '<p>No hay productos en el carrito.</p>';
+                precioTotalElem.textContent = '0.00';
+                cantidadTotalElem.textContent = '0';
+                comprarButton.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Cámaras</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="cabezera-superior-izquierda">
+            <div class="caja-login">
+                <a href="login.html" id="loginLink">Log In</a>
+                <span id="usuarioConectado" style="display: none;">Conectado como: <span id="nombreUsuario"></span> <a href="#" id="logout">Logout</a></span>
+            </div>
+            <div class="caja-buscador">
+                <input type="text" id="searchInput" placeholder="Buscar..." autocomplete="off">
+                <div id="suggestions" class="sugerencias" style="display: none;"></div>
+            </div>
+        </div>
+        <img src="imagenes/PROCAMERA.png" alt="PROCAMERA Logo" class="logo">
+        <div class="icono-carrito">
+            <a href="carrito.html">
+                <img src="imagenes/carrito.png" alt="Carrito de Compras">
+            </a>
+        </div>
+    </header>
+    <main>
+        <section class="producto" data-id="1">
+            <img src="imagenes/camara1.jpg" alt="Cámara 1">
+            <h2>Canon EOS R6</h2>
+            <p class="precio">€2,599.99</p>
+            <p class="stock">
+                Stock: <span class="stock-qty">5</span>
+                <span class="stock-controls" style="display: none;">
+                    <button class="increment-stock" data-id="1">+</button>
+                    <button class="decrement-stock" data-id="1">-</button>
+                    <input type="number" class="set-stock" data-id="1" min="0" value="5" style="display: none;">
+                    <button class="save-stock" data-id="1" style="display: none;">Guardar</button>
+                </span>
+            </p>
+            <a href="camara1.html">Ver Detalles</a>
+            <button class="add-al-carrito" data-id="1" data-nombre="Canon EOS R6" data-precio="2599.99">Añadir al Carrito</button>
+        </section>
+        <section class="producto" data-id="2">
+            <img src="imagenes/camara2.jpg" alt="Cámara 2">
+            <h2>Nikon D850</h2>
+            <p class="precio">€3,099.99</p>
+            <p class="stock">
+                Stock: <span class="stock-qty">3</span>
+                <span class="stock-controls" style="display: none;">
+                    <button class="increment-stock" data-id="2">+</button>
+                    <button class="decrement-stock" data-id="2">-</button>
+                    <input type="number" class="set-stock" data-id="2" min="0" value="3" style="display: none;">
+                    <button class="save-stock" data-id="2" style="display: none;">Guardar</button>
+                </span>
+            </p>
+            <a href="camara2.html">Ver Detalles</a>
+            <button class="add-al-carrito" data-id="2" data-nombre="Nikon D850" data-precio="3099.99">Añadir al Carrito</button>
+        </section>
+        <section class="producto" data-id="3">
+            <img src="imagenes/camara3.jpg" alt="Cámara 3">
+            <h2>Canon EOS M50 Mark II</h2>
+            <p class="precio">€749.99</p>
+            <p class="stock">
+                Stock: <span class="stock-qty">10</span>
+                <span class="stock-controls" style="display: none;">
+                    <button class="increment-stock" data-id="3">+</button>
+                    <button class="decrement-stock" data-id="3">-</button>
+                    <input type="number" class="set-stock" data-id="3" min="0" value="10" style="display: none;">
+                    <button class="save-stock" data-id="3" style="display: none;">Guardar</button>
+                </span>
+            </p>
+            <a href="camara3.html">Ver Detalles</a>
+            <button class="add-al-carrito" data-id="3" data-nombre="Canon EOS M50 Mark II" data-precio="749.99">Añadir al Carrito</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Tienda de Cámaras</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const usuario = localStorage.getItem('usuario');
+            const esAdmin = usuario === 'root';
+            if (usuario) {
+                document.getElementById('loginLink').style.display = 'none';
+                document.getElementById('usuarioConectado').style.display = 'inline';
+                document.getElementById('nombreUsuario').textContent = usuario;
+            }
+
+            document.getElementById('logout').addEventListener('click', function() {
+                localStorage.removeItem('usuario');
+                Cookies.remove('carrito-' + usuario);
+                document.getElementById('loginLink').style.display = 'inline';
+                document.getElementById('usuarioConectado').style.display = 'none';
+                window.location.reload();
+            });
+
+            const productos = [
+                { id: 1, nombre: 'Canon EOS R6', stock: 5, url: 'camara1.html' },
+                { id: 2, nombre: 'Nikon D850', stock: 3, url: 'camara2.html' },
+                { id: 3, nombre: 'Canon EOS M50 Mark II', stock: 10, url: 'camara3.html' }
+            ];
+
+            productos.forEach(producto => {
+                const stockGuardado = Cookies.get('stock-' + producto.id);
+                if (stockGuardado) {
+                    const stockElem = document.querySelector(`.producto[data-id="${producto.id}"] .stock-qty`);
+                    stockElem.textContent = stockGuardado;
+                    document.querySelector(`.producto[data-id="${producto.id}"] .set-stock`).value = stockGuardado;
+                }
+            });
+
+            if (esAdmin) {
+                document.querySelectorAll('.stock-controls').forEach(controls => {
+                    controls.style.display = 'inline-block';
+                });
+                document.querySelectorAll('.increment-stock').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        const stockElem = document.querySelector(`.producto[data-id="${id}"] .stock-qty`);
+                        let stock = parseInt(stockElem.textContent);
+                        stock++;
+                        stockElem.textContent = stock;
+                        document.querySelector(`.producto[data-id="${id}"] .set-stock`).value = stock;
+                        Cookies.set('stock-' + id, stock, { expires: 7 });
+                    });
+                });
+                document.querySelectorAll('.decrement-stock').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        const stockElem = document.querySelector(`.producto[data-id="${id}"] .stock-qty`);
+                        let stock = parseInt(stockElem.textContent);
+                        if (stock > 0) {
+                            stock--;
+                            stockElem.textContent = stock;
+                            document.querySelector(`.producto[data-id="${id}"] .set-stock`).value = stock;
+                            Cookies.set('stock-' + id, stock, { expires: 7 });
+                        }
+                    });
+                });
+                document.querySelectorAll('.save-stock').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        const newStock = document.querySelector(`.producto[data-id="${id}"] .set-stock`).value;
+                        const stockElem = document.querySelector(`.producto[data-id="${id}"] .stock-qty`);
+                        stockElem.textContent = newStock;
+                        Cookies.set('stock-' + id, newStock, { expires: 7 });
+                        alert('Stock actualizado');
+                    });
+                });
+            }
+
+            const searchInput = document.getElementById('searchInput');
+            const suggestions = document.getElementById('suggestions');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                suggestions.innerHTML = '';
+                if (query) {
+                    const matches = productos.filter(producto => producto.nombre.toLowerCase().includes(query));
+                    matches.forEach(match => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.className = 'sugerencia';
+                        suggestionItem.textContent = match.nombre;
+                        suggestionItem.addEventListener('click', function() {
+                            window.location.href = match.url;
+                        });
+                        suggestions.appendChild(suggestionItem);
+                    });
+                    suggestions.style.display = matches.length ? 'block' : 'none';
+                } else {
+                    suggestions.style.display = 'none';
+                }
+            });
+
+            const botonesAddCarrito = document.querySelectorAll('.add-al-carrito');
+            botonesAddCarrito.forEach(boton => {
+                boton.addEventListener('click', function() {
+                    const usuario = localStorage.getItem('usuario');
+                    if (!usuario) {
+                        alert('Debes iniciar sesión para añadir productos al carrito.');
+                        return;
+                    }
+
+                    const id = this.getAttribute('data-id');
+                    const nombre = this.getAttribute('data-nombre');
+                    const precio = this.getAttribute('data-precio');
+                    const stockElem = this.parentElement.querySelector('.stock-qty');
+                    let stock = parseInt(stockElem.textContent);
+
+                    if (stock > 0) {
+                        const producto = { id, nombre, precio, cantidad: 1 };
+                        let carrito = JSON.parse(Cookies.get('carrito-' + usuario) || '[]');
+                        const productoExistente = carrito.find(p => p.id == id);
+                        if (productoExistente) {
+                            if (productoExistente.cantidad < stock) {
+                                productoExistente.cantidad++;
+                                stock--;
+                            } else {
+                                alert('No puedes añadir más productos de los que hay en stock.');
+                                return;
+                            }
+                        } else {
+                            carrito.push(producto);
+                            stock--;
+                        }
+                        stockElem.textContent = stock;
+                        Cookies.set('stock-' + id, stock, { expires: 7 });
+                        Cookies.set('carrito-' + usuario, JSON.stringify(carrito), { expires: 7 });
+                        alert(`${nombre} ha sido añadido al carrito.`);
+                    } else {
+                        alert('Este producto está agotado.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

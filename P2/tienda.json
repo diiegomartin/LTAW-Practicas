@@ -1,0 +1,16 @@
+{
+    "usuarios": [
+        {
+            "nombre": "root",
+            "nombreReal": "Administrador",
+            "email": "admin@tienda.com",
+            "password": "1234"
+        },
+        {
+            "nombre": "usuario",
+            "nombreReal": "Usuario Normal",
+            "email": "usuario@tienda.com",
+            "password": "1234"
+        }
+    ]
+}

@@ -1,0 +1,104 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+header, main, footer {
+    padding: 20px;
+    text-align: center;
+}
+
+header {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+section {
+    flex: 1;
+    max-width: 600px;
+    margin: 20px;
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+.resumen-tabla img {
+    width: 50px;
+    height: auto;
+}
+
+form label {
+    display: block;
+    margin: 5px 0;
+}
+
+form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #555;
+}
+
+footer {
+    background-color: #f8f8f8;
+    border-top: 1px solid #ddd;
+}
+
+.btn-volver {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.btn-volver:hover {
+    background-color: #555;
+}
