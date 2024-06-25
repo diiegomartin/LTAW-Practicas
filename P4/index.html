@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del Sistema</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="info">
+            <h2>Información del Sistema</h2>
+            <p>Versión de Node: <span id="node-version"></span></p>
+            <p>Versión de Chrome: <span id="chrome-version"></span></p>
+            <p>Versión de Electron: <span id="electron-version"></span></p>
+            <p>Dirección IP: <span id="ip-address"></span></p>
+            <p>URL del Chat: <a id="chat-url" href="#"></a></p>
+            <canvas id="qr-code"></canvas> <!-- Espacio para el código QR -->
+        </div>
+        <div class="messages">
+            <h2>Mensajes</h2>
+            <div id="messages-box"></div>
+        </div>
+    </div>
+    <script>
+        const { ipcRenderer } = require('electron');
+        const os = require('os');
+        const { networkInterfaces } = require('os');
+        const QRCode = require('qrcode');
+
+        document.getElementById('node-version').textContent = process.versions.node;
+        document.getElementById('chrome-version').textContent = process.versions.chrome;
+        document.getElementById('electron-version').textContent = process.versions.electron;
+
+        function getIPAddress() {
+            const interfaces = networkInterfaces();
+            for (let name in interfaces) {
+                for (let iface of interfaces[name]) {
+                    if (iface.family === 'IPv4' && !iface.internal) {
+                        return iface.address;
+                    }
+                }
+            }
+        }
+
+        const ipAddress = getIPAddress();
+        const chatURL = `http://${ipAddress}:9090`;
+        document.getElementById('ip-address').textContent = ipAddress;
+        document.getElementById('chat-url').textContent = chatURL;
+        document.getElementById('chat-url').href = chatURL;
+
+        // Generar el código QR
+        QRCode.toCanvas(document.getElementById('qr-code'), chatURL, function (error) {
+            if (error) console.error(error);
+            console.log('QR code generated!');
+        });
+
+        const socket = io(chatURL);
+
+        const messagesBox = document.getElementById('messages-box');
+
+        socket.on('message', (msg) => {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `<strong>${msg.username}:</strong> ${msg.text}`;
+            messagesBox.appendChild(messageElement);
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+        });
+    </script>
+</body>
+</html>
