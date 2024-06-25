@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <div class="info">
-            <h2>Información del Sistema</h2>
+            <h2>Información</h2>
             <p>Versión de Node: <span id="node-version"></span></p>
             <p>Versión de Chrome: <span id="chrome-version"></span></p>
             <p>Versión de Electron: <span id="electron-version"></span></p>
@@ -60,7 +60,7 @@
 
         const messagesBox = document.getElementById('messages-box');
 
-        socket.on('message', (msg) => {
+        socket.on('homeMessage', (msg) => {
             const messageElement = document.createElement('div');
             messageElement.classList.add('message');
             messageElement.innerHTML = `<strong>${msg.username}:</strong> ${msg.text}`;

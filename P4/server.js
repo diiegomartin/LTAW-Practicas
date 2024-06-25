@@ -26,7 +26,9 @@ io.on('connection', (socket) => {
     socket.on('newUser', (username) => {
         users[socket.id] = username;
         io.emit('userList', Object.values(users));
-        socket.broadcast.emit('message', { username: 'Servidor', text: `${username} se ha unido al chat.` });
+        const joinMessage = { username: 'Servidor', text: `${username} se ha unido al chat.` };
+        io.emit('message', joinMessage); // Emit to all clients including the new one
+        io.emit('homeMessage', joinMessage); // Emit to the home screen
     });
 
     socket.on('disconnect', () => {
@@ -34,13 +36,16 @@ io.on('connection', (socket) => {
         delete users[socket.id];
         io.emit('userList', Object.values(users));
         if (username) {
-            socket.broadcast.emit('message', { username: 'Servidor', text: `${username} ha abandonado el chat.` });
+            const leaveMessage = { username: 'Servidor', text: `${username} ha abandonado el chat.` };
+            io.emit('message', leaveMessage); // Emit to all clients
+            io.emit('homeMessage', leaveMessage); // Emit to the home screen
         }
     });
 
     socket.on('chatMessage', (msg) => {
         console.log(`Mensaje recibido: ${msg.text}`);
-        io.emit('message', msg);
+        io.emit('message', msg); // Emit to all clients
+        io.emit('homeMessage', msg); // Emit to the home screen
     });
 });
 
