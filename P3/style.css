@@ -1,0 +1,143 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #2f3136;
+    color: #ddd;
+}
+
+#user-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+#user-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#chat-container {
+    display: flex;
+    width: 80%;
+    height: 80%;
+    background: #36393f;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#sidebar {
+    width: 20%;
+    background: #2f3136;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+#sidebar h3 {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #fff;
+}
+
+#users-list {
+    height: calc(100% - 30px);
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #202225;
+    border-radius: 5px;
+}
+
+#main-chat {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+#chat-box {
+    flex: 1;
+    overflow-y: scroll;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #2f3136;
+    border-radius: 5px;
+    color: #ddd;
+}
+
+.message {
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    color: #fff;
+    word-wrap: break-word;
+    max-width: 60%;
+}
+
+.message.server {
+    background-color: #3b3e45;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.message.user {
+    background-color: #007BFF;
+    margin-left: auto;
+    text-align: right;
+}
+
+.message.other {
+    background-color: #3b3e45;
+    margin-right: auto;
+    text-align: left;
+}
+
+.message strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #a5a5a5;
+}
+
+#message-input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#message-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#send-button {
+    width: 60px;
+    padding: 10px;
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#send-button:hover {
+    background: #0056b3;
+}
